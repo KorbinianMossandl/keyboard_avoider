@@ -50,6 +50,12 @@ class _KeyboardAvoiderState extends State<KeyboardAvoider> with WidgetsBindingOb
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // Add a status listener to the animation after the initial build.
+    // Wait a frame so that _animationKey.currentState is not null.
+    Future.microtask(() {
+      _animationListener = _animationStatusChanged;
+      _animationKey.currentState.animation.addStatusListener(_animationListener);
+    });
   }
 
   @override
@@ -61,15 +67,6 @@ class _KeyboardAvoiderState extends State<KeyboardAvoider> with WidgetsBindingOb
 
   @override
   Widget build(BuildContext context) {
-    // Add a status listener to the animation after the initial build.
-    // Wait a frame so that _animationKey.currentState is not null.
-    if (_animationListener == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _animationListener = _animationStatusChanged;
-        _animationKey.currentState.animation.addStatusListener(_animationListener);
-      });
-    }
-
     // If [child] is a [ScrollView], get its [ScrollController]
     // and embed the [child] directly in an [AnimatedContainer].
     if (widget.child is ScrollView) {
