@@ -164,7 +164,7 @@ class _KeyboardAvoiderState extends State<KeyboardAvoider> with WidgetsBindingOb
 
     // If widget is partially obscured by the keyboard, adjust bottom padding to fully expose it
     final overlap = max(0.0, widgetRect.bottom - keyboardTop);
-    if (overlap != _overlap && overlap != double.nan) {
+    if (overlap != _overlap && !overlap.isNaN && !overlap.isNegative) {
       setState(() {
         _overlap = overlap;
       });
